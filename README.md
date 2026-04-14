@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Character Relationship Tracker
 
-## Getting Started
+## Overview
+Character Relationship Tracker is a web application designed to help users understand how characters in a novel, drama, or other story-based media are connected. The app focuses on giving users a clear and interactive visual relationship map without overwhelming them with long summaries or accidental spoilers.
 
-First, run the development server:
+## Problem
+Many users lose track of characters and their relationships in stories with large or complicated casts. Current solutions are often too text-heavy, not interactive, or reveal spoilers too early. This project aims to solve that by providing a spoiler-safe and visually understandable tracker.
+
+## Core Value
+The core value of this project is a spoiler-safe interactive relationship map that shows how characters are connected.
+
+## Intended Users
+- Readers of novels
+- Viewers of dramas and series
+- Users trying to understand complex story relationships
+- Users who want to avoid spoilers while catching up
+
+## Planned Features
+- homepage with project explanation
+- story input or selection flow
+- interactive character relationship map
+- character detail panel
+- spoiler-safe chapter or episode progress filter
+- clean and simple interface
+
+## Tech Stack
+Next.js + Supabase
+
+## AI Feature
+AI may be used to help extract character names, roles, and relationships from user-provided text or summaries and organize them into a structured relationship map.
+
+## Roles
+### Client
+Youngpyung Lee
+
+### Developer
+Finnick Chen
+
+## Agreed Development Fee
+10 GIX Bucks
+
+## Timeline
+
+### Check-in 1
+- repository setup
+- initial application structure
+- homepage or entry view
+- data model planning
+
+### Check-in 2
+- working relationship map with sample data
+- basic character interaction
+- character detail display
+
+### Check-in 3
+- spoiler-safe progress filter
+- UI polish
+- demo-ready version
+
+## Workflow
+Development will be tracked through GitHub Issues and pull requests. Major implementation milestones should be reviewed by the client for scope alignment and project direction.
+
+## Notes
+This repository is intended for the TECHIN 510 client-developer project workflow. The project scope is intentionally limited so the core value can be demonstrated clearly within the expected course timeline.
+
+## Local development
+This app is a [Next.js](https://nextjs.org) project. Run the dev server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open [http://localhost:3000](http://localhost:3000) to view the app.
