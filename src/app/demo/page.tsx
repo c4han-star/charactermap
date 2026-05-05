@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { DemoStorySection } from "@/components/demo/DemoStorySection";
 import { Button } from "@/components/landing/Button";
 import { MarketingShell } from "@/components/landing/MarketingShell";
-import { RelationshipGraphPreview } from "@/components/landing/RelationshipGraphPreview";
 
 type DemoPageProps = {
   searchParams: Promise<{ show?: string | string[] }>;
@@ -70,37 +70,28 @@ export default async function DemoPage({ searchParams }: DemoPageProps) {
             </div>
           ) : null}
 
-          <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:items-start">
-            <section
-              className="min-h-[320px] rounded-xl border border-dashed border-border bg-surface/40 p-6 sm:p-8"
-              aria-labelledby="graph-placeholder-title"
+          <section
+            className="mt-10"
+            aria-labelledby="graph-board-title"
+          >
+            <h2
+              id="graph-board-title"
+              className="text-sm font-medium text-foreground"
             >
-              <h2 id="graph-placeholder-title" className="text-sm font-medium text-foreground">
-                The map
-              </h2>
-              <p className="mt-2 max-w-prose text-sm text-muted">
-                Faces, lines, and a light tap for more—matched to how far you&apos;ve
-                watched. Full experience landing here soon.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Button type="button" variant="secondary" disabled className="cursor-not-allowed">
-                  Episode 1 (soon)
-                </Button>
-                <Button type="button" variant="ghost" disabled className="cursor-not-allowed">
-                  Reset view
-                </Button>
-              </div>
-            </section>
-            <div>
-              <p className="mb-3 text-xs font-medium uppercase tracking-widest text-muted">
-                Preview
-              </p>
-              <RelationshipGraphPreview />
+              The map
+            </h2>
+            <p className="mt-2 max-w-prose text-sm text-muted">
+              Drag the polaroids, pan the corkboard, follow the red string. Import your own
+              story text or a link to auto-build a board, or use the Single&apos;s Inferno
+              episode picker.
+            </p>
+            <div className="mt-6">
+              <DemoStorySection />
             </div>
-          </div>
+          </section>
 
           <div className="mt-10 flex flex-wrap gap-3">
-            <Button href="/demo?show=singles-inferno" variant="primary">
+            <Button href="/demo?show=singles-inferno&episode=ep1" variant="primary">
               Open Single&apos;s Inferno
             </Button>
             <Button href="/" variant="secondary">

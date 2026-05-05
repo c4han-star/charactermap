@@ -38,9 +38,9 @@ export function Hero() {
             The faces, the ties, the tension—without tab hunts or ruined twists.
           </p>
         </div>
-        <div className="flex justify-center lg:justify-end">
-          <RelationshipGraphPreview />
-        </div>
+          <div className="flex justify-center lg:justify-end">
+            <RelationshipGraphPreview variant="compact" />
+          </div>
       </div>
     </section>
   );
