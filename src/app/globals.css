@@ -223,3 +223,25 @@ body {
     radial-gradient(ellipse 90% 70% at 50% 100%, rgba(120, 30, 45, 0.1), transparent 55%),
     radial-gradient(ellipse 55% 45% at 85% 25%, rgba(40, 50, 90, 0.07), transparent 50%);
 }
+
+/* --- Featured universes: cinematic cards --- */
+.universe-card-grain {
+  pointer-events: none;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='ug'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23ug)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+@keyframes universe-line-drift {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -56;
+  }
+}
+
+.universe-line-drift {
+  stroke-dasharray: 6 18;
+  animation: universe-line-drift 22s linear infinite;
+}
