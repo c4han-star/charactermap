@@ -19,7 +19,7 @@ export function Footer() {
           </Link>
         </nav>
         <p className="text-xs text-muted sm:text-right">
-          For shows with a lot of faces—and no patience for spoilers.
+          Emotional mapping · detective energy · built for screenshots.
         </p>
       </div>
     </footer>

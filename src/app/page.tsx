@@ -1,4 +1,5 @@
 import { DemoSection } from "@/components/landing/DemoSection";
+import { FeaturedUniverses } from "@/components/landing/FeaturedUniverses";
 import { Hero } from "@/components/landing/Hero";
 import { HowItWorks } from "@/components/landing/HowItWorks";
 import { MarketingShell } from "@/components/landing/MarketingShell";
@@ -10,6 +11,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col">
       <MarketingShell>
         <Hero />
+        <FeaturedUniverses />
         <Problem />
         <Solution />
         <DemoSection />

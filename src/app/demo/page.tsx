@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { DemoStorySection } from "@/components/demo/DemoStorySection";
+import { DemoMapSection } from "@/components/demo/DemoMapSection";
 import { Button } from "@/components/landing/Button";
 import { MarketingShell } from "@/components/landing/MarketingShell";
 
@@ -9,9 +9,16 @@ type DemoPageProps = {
 };
 
 export const metadata = {
-  title: "Demo | Character Relationship Tracker",
+  title: "Demo | AI Drama Relationship Map",
   description:
-    "Try Single's Inferno—messy relationships, spoiler-safe through Episode 1.",
+    "Generate a corkboard relationship graph for any TV show you describe, with optional Single's Inferno S5 demo data.",
+};
+
+const packagedExample = {
+  id: "singles-inferno" as const,
+  title: "Single's Inferno S5",
+  blurb: "Single's Inferno (Korean dating show) — fixed cast, five-episode timeline (no custom LLM call).",
+  href: "/demo?show=singles-inferno&episode=ep1",
 };
 
 export default async function DemoPage({ searchParams }: DemoPageProps) {
@@ -19,6 +26,7 @@ export default async function DemoPage({ searchParams }: DemoPageProps) {
   const raw = sp.show;
   const show = Array.isArray(raw) ? raw[0] : raw;
   const isSinglesInferno = show === "singles-inferno";
+  const universe = isSinglesInferno ? "singles-inferno" : "generic";
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -34,12 +42,75 @@ export default async function DemoPage({ searchParams }: DemoPageProps) {
           </nav>
 
           <header className="mt-8 max-w-2xl">
-            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Demo</h1>
+            <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+              Demo
+            </h1>
             <p className="mt-3 text-muted">
-              Step in like you opened a panel mid-episode—the cast and connections will
-              appear here as we wire in the full experience.
+              Type any series title and optional notes — the board below calls your LLM
+              (<code className="text-foreground">DEEPSEEK_API_KEY</code> or{" "}
+              <code className="text-foreground">OPENAI_API_KEY</code> in{" "}
+              <code className="text-foreground">.env.local</code>
+              ) and builds a fresh graph. Single&apos;s Inferno S5 is only a packaged
+              example with a timeline scrubber, not the main workflow.
             </p>
           </header>
+
+          <section className="mt-10" aria-labelledby="graph-board-title">
+            <h2
+              id="graph-board-title"
+              className="text-sm font-medium text-foreground"
+            >
+              Interactive board
+            </h2>
+            <p className="mt-2 max-w-prose text-sm text-muted">
+              Start with <span className="text-foreground">Your show</span> to generate
+              from scratch. Pink = romance, blue = alliance, red = conflict / betrayal,
+              dashed = crush or hidden ties. Want a reference board? Use the packaged
+              example below.
+            </p>
+            <div className="mt-6">
+              <DemoMapSection universe={universe} />
+            </div>
+          </section>
+
+          <section
+            className="mt-10 border-t border-border pt-8"
+            aria-labelledby="packaged-example"
+          >
+            <h2
+              id="packaged-example"
+              className="text-sm font-medium text-foreground"
+            >
+              Packaged example
+            </h2>
+            <p className="mt-2 max-w-prose text-sm text-muted">
+              One curated demo you can open without typing a title — useful to see the
+              timeline scrubber and edge styles on a full cast.
+            </p>
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
+              <Link
+                href={packagedExample.href}
+                className={`block max-w-md rounded-lg border px-4 py-3 text-sm transition-colors ${
+                  isSinglesInferno
+                    ? "border-accent bg-accent-muted"
+                    : "border-border bg-surface/50 hover:border-zinc-600"
+                }`}
+              >
+                <span className="font-medium text-foreground">{packagedExample.title}</span>
+                <span className="mt-0.5 block text-xs text-muted sm:text-sm">
+                  {packagedExample.blurb}
+                </span>
+              </Link>
+              {isSinglesInferno ? (
+                <Link
+                  href="/demo"
+                  className="text-sm text-muted underline-offset-4 transition-colors hover:text-foreground hover:underline"
+                >
+                  ← Use your own show (clear demo URL)
+                </Link>
+              ) : null}
+            </div>
+          </section>
 
           {isSinglesInferno ? (
             <div
@@ -63,37 +134,14 @@ export default async function DemoPage({ searchParams }: DemoPageProps) {
                     Single&apos;s Inferno
                   </p>
                   <p className="mt-1 text-sm text-muted">
-                    Episode 1 — we only show what you&apos;ve earned so far.
+                    Scrub the timeline — ties and colors update per episode (demo).
                   </p>
                 </div>
               </div>
             </div>
           ) : null}
 
-          <section
-            className="mt-10"
-            aria-labelledby="graph-board-title"
-          >
-            <h2
-              id="graph-board-title"
-              className="text-sm font-medium text-foreground"
-            >
-              The map
-            </h2>
-            <p className="mt-2 max-w-prose text-sm text-muted">
-              Drag the polaroids, pan the corkboard, follow the red string. Import your own
-              story text or a link to auto-build a board, or use the Single&apos;s Inferno
-              episode picker.
-            </p>
-            <div className="mt-6">
-              <DemoStorySection />
-            </div>
-          </section>
-
           <div className="mt-10 flex flex-wrap gap-3">
-            <Button href="/demo?show=singles-inferno&episode=ep1" variant="primary">
-              Open Single&apos;s Inferno
-            </Button>
             <Button href="/" variant="secondary">
               Back to home
             </Button>

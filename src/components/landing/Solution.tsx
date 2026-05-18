@@ -1,15 +1,15 @@
 const features = [
   {
-    title: "See the full picture",
-    body: "Understand how everyone is connected at a glance.",
+    title: "One conspiracy board",
+    body: "Polaroids, pins, and color-coded strings — Netflix-doc energy, tuned for relationships.",
   },
   {
-    title: "Stay spoiler-safe",
-    body: "Only see what's been revealed so far.",
+    title: "Timeline that respects the story",
+    body: "Scrub episodes; ties and tension update with the beat you’re on (demo on Single’s Inferno S5).",
   },
   {
-    title: "Tap and understand",
-    body: "Instantly know who a character is and how they matter.",
+    title: "Built to screenshot",
+    body: "Export a PNG when you nail the frame — vertical layouts and story formats come next.",
   },
 ] as const;
 
@@ -22,12 +22,13 @@ export function Solution() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <h2
           id="solution-heading"
-          className="text-2xl font-semibold tracking-tight sm:text-3xl"
+          className="font-display text-2xl font-semibold tracking-tight sm:text-3xl"
         >
-          Everything, right when you need it
+          Visual storytelling, not a graph editor
         </h2>
         <p className="mt-3 max-w-2xl text-muted">
-          No homework. No spoilers. Just the people in this moment.
+          The product is entertainment-first: the renderer owns layout and motion; AI only
+          classifies and summarizes into structured data.
         </p>
         <ol className="mt-10 space-y-4">
           {features.map((f, i) => (

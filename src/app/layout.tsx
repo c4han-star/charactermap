@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,14 +12,20 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
+
 export const metadata: Metadata = {
-  title: "Character Relationship Tracker",
+  title: "AI Drama Relationship Map",
   description:
-    "Stay in the story. See how every character connects—without spoilers, without leaving your show.",
+    "Visualize the chaos — cinematic relationship maps for reality shows, fandoms, and drama. Entertainment-first, shareable boards.",
   openGraph: {
-    title: "Character Relationship Tracker",
+    title: "AI Drama Relationship Map",
     description:
-      "See how everyone connects at a glance. Spoiler-safe, right beside what you’re watching.",
+      "See who’s tied to who. Dark conspiracy-board energy — not a spreadsheet.",
     type: "website",
   },
 };
@@ -32,7 +38,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full scroll-smooth antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full scroll-smooth antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {children}

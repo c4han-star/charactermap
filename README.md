@@ -71,3 +71,17 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the app.
+
+## Deploy (public URL)
+
+The repository URL (`https://github.com/.../final-project-codebase-yplee948-hub-3`) hosts **source code** only. This app uses **Next.js API routes** (`/api/agent-graph`, `/api/cast-headshots`, etc.), so **GitHub Pages (static hosting) is not enough** for a working demo.
+
+**Recommended: Vercel (free, connects to GitHub)**
+
+1. Push your branch to GitHub (e.g. `main` or `yplee-week2`).
+2. Sign in at [vercel.com](https://vercel.com) → **Add New…** → **Project** → **Import** this repository.
+3. Framework preset: **Next.js**. Root directory: repo root. Build: default (`npm run build`).
+4. Under **Environment Variables**, add the same keys you use locally (`OPENAI_API_KEY` / `DEEPSEEK_API_KEY`, `TMDB_API_KEY`, optional `GOOGLE_CSE_*`, `LLM_PROVIDER`, etc.). Do **not** commit `.env.local`; it is gitignored.
+5. Deploy. Vercel will give you a URL like `https://<project>.vercel.app`.
+
+After the first import, every `git push` to the connected branch can trigger an automatic production deploy (Vercel default).

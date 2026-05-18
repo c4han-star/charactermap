@@ -41,3 +41,21 @@ body {
   background: var(--accent-muted);
   color: var(--foreground);
 }
+
+.font-display {
+  font-family: var(--font-playfair), ui-serif, Georgia, "Times New Roman", serif;
+}
+
+@keyframes drama-edge-pulse {
+  0%,
+  100% {
+    stroke-opacity: 1;
+  }
+  50% {
+    stroke-opacity: 0.42;
+  }
+}
+
+.path-edge-pulse {
+  animation: drama-edge-pulse 1.25s ease-in-out infinite;
+}

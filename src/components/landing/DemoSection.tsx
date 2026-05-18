@@ -27,28 +27,29 @@ export function DemoSection() {
             </div>
             <div className="flex flex-col justify-center p-8 sm:p-10 lg:p-12 lg:pl-10">
               <p className="text-xs font-medium uppercase tracking-widest text-accent">
-                Try it now
+                Live universe
               </p>
               <h2
                 id="demo-heading"
-                className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl"
+                className="font-display mt-2 text-2xl font-semibold tracking-tight sm:text-3xl"
               >
-                Try it on Single&apos;s Inferno
+                See the drama unfold
               </h2>
               <p className="mt-4 max-w-xl text-muted">
-                Messy relationships, shifting dynamics — exactly where this helps most.
+                Single&apos;s Inferno S5 ships with a timeline scrub, typed relationship
+                strings, and export — the same conspiracy-board look every time.
               </p>
               <div className="mt-8">
                 <Button
-                  href="/demo?show=singles-inferno"
+                  href="/demo?show=singles-inferno&episode=ep1"
                   variant="primary"
                   className="min-h-12 px-8 text-base"
                 >
-                  Enter Demo
+                  Open the board
                 </Button>
               </div>
               <p className="mt-4 text-sm text-muted">
-                Start from Episode 1 to stay spoiler-free.
+                More curated shows and fiction maps roll in as we ship Phase 1.
               </p>
             </div>
           </div>

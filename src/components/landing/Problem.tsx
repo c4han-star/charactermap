@@ -1,15 +1,15 @@
 const pains = [
   {
-    title: "Too many faces to remember",
-    body: "Someone walks back in and you hit pause—wait, who is that again?",
+    title: "Too many threads at once",
+    body: "Crushes, exes, alliances, and beef — it’s hard to hold the whole picture in your head.",
   },
   {
-    title: "Relationships that change every episode",
-    body: "Crushes, rivalries, and alliances keep shifting under your feet.",
+    title: "The story keeps moving",
+    body: "Every episode rewires who trusts who. Static recap articles don’t feel like the show.",
   },
   {
-    title: "Looking things up breaks the experience",
-    body: "You reach for your phone and suddenly you’re reading ahead—or losing the mood.",
+    title: "You want the vibe, not a spreadsheet",
+    body: "You’re here for emotional chaos and clarity — not productivity software.",
   },
 ] as const;
 
@@ -19,12 +19,13 @@ export function Problem() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <h2
           id="problem-heading"
-          className="text-2xl font-semibold tracking-tight sm:text-3xl"
+          className="font-display text-2xl font-semibold tracking-tight sm:text-3xl"
         >
-          Ever paused just to figure out who someone is?
+          Who’s tied to who — right now?
         </h2>
         <p className="mt-3 max-w-2xl text-muted">
-          Pause. Rewind. Glance at your phone. It happens to everyone.
+          Reality and fandom drama are dense. You want a wall you can stare at, not another
+          tab rabbit hole.
         </p>
         <ul className="mt-10 grid gap-6 sm:grid-cols-3">
           {pains.map((item) => (
