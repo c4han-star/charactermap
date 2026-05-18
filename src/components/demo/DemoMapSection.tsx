@@ -289,6 +289,7 @@ export function DemoMapSection({ universe }: DemoMapSectionProps) {
 
   return (
     <div className="relative z-10 space-y-12">
+      <div className="mx-auto w-full max-w-xl space-y-12 px-2 sm:px-0">
       <div className="relative rounded-[1.35rem] bg-zinc-950/50 px-8 py-11 shadow-[0_28px_90px_-28px_rgba(0,0,0,0.92)] ring-1 ring-white/[0.08] backdrop-blur-2xl sm:px-12 sm:py-14">
         <div className="space-y-8" onPointerDown={(e) => e.stopPropagation()}>
           <label className="block">
@@ -511,8 +512,9 @@ export function DemoMapSection({ universe }: DemoMapSectionProps) {
           </button>
         </div>
       ) : null}
+      </div>
 
-      <div className="pt-2">
+      <div className="w-full min-w-0 pt-2">
         <RelationshipGraphPreview
           variant="full"
           story={story}

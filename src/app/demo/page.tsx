@@ -86,7 +86,7 @@ export default async function DemoPage({ searchParams }: DemoPageProps) {
           )}
         </div>
 
-        <div className="relative mx-auto max-w-xl px-5 pb-16 sm:px-8 sm:pb-24">
+        <div className="relative w-full max-w-none px-3 pb-16 sm:px-5 sm:pb-24 lg:px-8">
           <DemoMapSection universe={universe} />
         </div>
 
