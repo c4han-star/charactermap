@@ -1,5 +1,14 @@
+import Image from "next/image";
 import { Button } from "./Button";
 import { ConspiracyHeroWall } from "./ConspiracyHeroWall";
+
+/** Illustrative fan avatars (RandomUser stock portraits — not real users). */
+const FAN_AVATARS = [
+  "https://randomuser.me/api/portraits/women/44.jpg",
+  "https://randomuser.me/api/portraits/men/32.jpg",
+  "https://randomuser.me/api/portraits/women/68.jpg",
+  "https://randomuser.me/api/portraits/men/75.jpg",
+] as const;
 
 export function Hero() {
   return (
@@ -50,13 +59,20 @@ export function Hero() {
             </div>
 
             <div className="mt-10 flex flex-wrap items-center gap-4">
-              <div className="flex -space-x-2">
-                {[0, 1, 2, 3].map((i) => (
+              <div className="flex -space-x-2" aria-label="Illustrative fan avatars">
+                {FAN_AVATARS.map((src, i) => (
                   <div
-                    key={i}
-                    className="h-9 w-9 rounded-full border-2 border-[#0a0908] bg-gradient-to-br from-zinc-600 to-zinc-900 shadow-inner"
-                    aria-hidden
-                  />
+                    key={src}
+                    className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full border-2 border-[#0a0908] bg-zinc-800 shadow-inner"
+                  >
+                    <Image
+                      src={src}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      sizes="36px"
+                    />
+                  </div>
                 ))}
               </div>
               <div>
