@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { tmdbPosterUrl } from "@/lib/tmdb/tmdbPosterUrl";
+import { tmdbImageUrl } from "@/lib/tmdb/tmdbPosterUrl";
 
 function demoPrefill(seedTitle: string, seedPremise: string) {
   const p = new URLSearchParams();
@@ -12,8 +12,11 @@ function demoPrefill(seedTitle: string, seedPremise: string) {
 
 const singlesHref = "/demo?show=singles-inferno&episode=ep1";
 
+/** TMDB TV 139798 — official wide backdrop (high-res via `w1280`). */
+const SINGLES_HERO_BACKDROP = "/xPquEORoNRpL1KZtLNVHn4zZ7Cp.jpg";
+
 /**
- * Official series/movie posters from TMDB (resolved via API; IDs fixed in repo).
+ * TMDB stills — picked for visible faces / cast energy where possible (`w1280` for sharp tiles).
  * @see https://www.themoviedb.org/
  */
 const secondaryUniverses = [
@@ -25,7 +28,8 @@ const secondaryUniverses = [
       "The Glory",
       "Netflix Korean revenge drama: school bullies, victims, allies, and schemes — one season arc.",
     ),
-    image: tmdbPosterUrl("/uUM4LVlPgIrww07OoEKrGWlS1Ej.jpg"),
+    image: tmdbImageUrl("/qlzskZIlenkAODsSWVClIZzEO3.jpg"),
+    imgClass: "object-cover object-[center_15%]",
     grade: "from-stone-950/90 via-zinc-950/50 to-transparent",
     accent: "shadow-[inset_0_0_80px_-20px_rgba(127,29,29,0.45)]",
     stagger: "lg:translate-y-3",
@@ -39,8 +43,9 @@ const secondaryUniverses = [
       "Heart Signal",
       "Korean dating reality: cast members, panelists, and evolving love lines across the season.",
     ),
-    /** TMDB TV 72976 — original Korean Heart Signal (2017). */
-    image: tmdbPosterUrl("/x15neeMjTYwwnzspAw7S8RMYSqq.jpg"),
+    /** TMDB TV 72976 — cast key art (replaces logo-only poster). */
+    image: tmdbImageUrl("/4YDtNaQaDMG0VvM39j78lNx14Ho.jpg"),
+    imgClass: "object-cover object-top",
     grade: "from-fuchsia-950/70 via-rose-950/40 to-transparent",
     accent: "shadow-[inset_0_0_100px_-30px_rgba(236,72,153,0.35)]",
     stagger: "lg:-translate-y-1",
@@ -54,8 +59,9 @@ const secondaryUniverses = [
       "Transit Love 2",
       "Korean dating show where former couples live together; focus on unresolved ties and new attractions.",
     ),
-    /** TMDB TV 128119 — EXchange (환승연애 / Transit Love franchise). */
-    image: tmdbPosterUrl("/krXSEbBeAiWyQ3ZQ6JhTrpZlLk5.jpg"),
+    /** TMDB TV 128119 — wide still so crop can center on people, not only floor graphic. */
+    image: tmdbImageUrl("/oH17hJtykYzTC2A0DVktH29wiGE.jpg"),
+    imgClass: "object-cover object-[center_38%]",
     grade: "from-slate-950/85 via-blue-950/35 to-transparent",
     accent: "shadow-[inset_0_0_90px_-25px_rgba(30,58,138,0.4)]",
     stagger: "lg:translate-y-2",
@@ -69,8 +75,9 @@ const secondaryUniverses = [
       "Street Woman Fighter",
       "Korean dance survival show: competing street dance crews, judges, eliminations, and alliances.",
     ),
-    /** TMDB TV 130347 — Street Woman Fighter. */
-    image: tmdbPosterUrl("/h6sYtJUrl2821oRzhhjXpJ3RXVQ.jpg"),
+    /** TMDB TV 130347 — stage backdrop (avoids head-cropped vertical poster). */
+    image: tmdbImageUrl("/cVn92wjNmXhoCMiKHcNZAZUH0xT.jpg"),
+    imgClass: "object-cover object-[center_28%]",
     grade: "from-violet-950/80 via-fuchsia-950/45 to-transparent",
     accent: "shadow-[inset_0_0_100px_-20px_rgba(168,85,247,0.45)]",
     stagger: "lg:-translate-y-2",
@@ -84,8 +91,9 @@ const secondaryUniverses = [
       "Harry Potter",
       "Wizarding world core cast: Hogwarts houses, Order of the Phoenix, Death Eaters, and key bonds.",
     ),
-    /** TMDB movie 671 — Harry Potter and the Philosopher's Stone. */
-    image: tmdbPosterUrl("/wuMc08IPKEatf9rnMNXvIDxqP4W.jpg"),
+    /** TMDB movie 671 — international one-sheet with clear hero face. */
+    image: tmdbImageUrl("/o6Zcka8nRMTIYKJDBSXYO8WEUMY.jpg"),
+    imgClass: "object-cover object-[center_20%]",
     grade: "from-emerald-950/75 via-zinc-950/50 to-transparent",
     accent: "shadow-[inset_0_0_90px_-30px_rgba(5,46,22,0.5)]",
     stagger: "lg:translate-y-4",
@@ -174,12 +182,12 @@ export function FeaturedUniverses() {
             className="group relative isolate order-1 overflow-hidden rounded-[1.75rem] ring-1 ring-white/[0.1] shadow-[0_40px_120px_-40px_rgba(0,0,0,0.95)] transition-[transform,box-shadow,ring-color] duration-700 ease-out hover:shadow-[0_50px_140px_-36px_rgba(220,38,38,0.22)] hover:ring-accent/35 lg:col-span-7 lg:row-span-2 lg:min-h-[min(72vh,560px)]"
           >
             <Image
-              src="/images/singles-inferno-poster.png"
-              alt="Single's Inferno promotional poster"
+              src={tmdbImageUrl(SINGLES_HERO_BACKDROP)}
+              alt="Single's Inferno — official still (TMDB)"
               fill
               priority
-              className="object-cover object-[center_22%] transition-[transform,filter] duration-[1.1s] ease-out group-hover:scale-[1.05] group-hover:brightness-110"
-              sizes="(max-width: 1024px) 100vw, 58vw"
+              className="object-cover object-center transition-[transform,filter] duration-[1.1s] ease-out group-hover:scale-[1.04] group-hover:brightness-110 sm:object-[center_42%]"
+              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 70vw, min(1200px, 70vw)"
             />
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/25" />
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-accent/25 via-transparent to-sky-950/20 opacity-80 mix-blend-soft-light" />
@@ -253,10 +261,10 @@ function SecondaryCard({
     >
       <Image
         src={card.image}
-        alt={`${card.label} poster`}
+        alt={`${card.label} still`}
         fill
-        className="object-cover transition-[transform,filter] duration-[900ms] ease-out group-hover:scale-110 group-hover:brightness-105"
-        sizes={layout === "rail" ? "220px" : "(max-width: 1280px) 40vw, 260px"}
+        className={`transition-[transform,filter] duration-[900ms] ease-out group-hover:scale-110 group-hover:brightness-105 ${card.imgClass}`}
+        sizes={layout === "rail" ? "280px" : "(max-width: 1280px) 45vw, 360px"}
       />
       <div
         className={`pointer-events-none absolute inset-0 bg-gradient-to-t ${card.grade}`}
