@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { tmdbPosterUrl } from "@/lib/tmdb/tmdbPosterUrl";
+
 function demoPrefill(seedTitle: string, seedPremise: string) {
   const p = new URLSearchParams();
   p.set("title", seedTitle);
@@ -10,7 +12,10 @@ function demoPrefill(seedTitle: string, seedPremise: string) {
 
 const singlesHref = "/demo?show=singles-inferno&episode=ep1";
 
-/** Mood photography (Unsplash) — atmospheric, not show IP. */
+/**
+ * Official series/movie posters from TMDB (resolved via API; IDs fixed in repo).
+ * @see https://www.themoviedb.org/
+ */
 const secondaryUniverses = [
   {
     key: "glory",
@@ -20,8 +25,7 @@ const secondaryUniverses = [
       "The Glory",
       "Netflix Korean revenge drama: school bullies, victims, allies, and schemes — one season arc.",
     ),
-    image:
-      "https://images.unsplash.com/photo-1534809027769-b00d750a6bba?auto=format&fit=crop&w=900&q=80",
+    image: tmdbPosterUrl("/uUM4LVlPgIrww07OoEKrGWlS1Ej.jpg"),
     grade: "from-stone-950/90 via-zinc-950/50 to-transparent",
     accent: "shadow-[inset_0_0_80px_-20px_rgba(127,29,29,0.45)]",
     stagger: "lg:translate-y-3",
@@ -35,8 +39,8 @@ const secondaryUniverses = [
       "Heart Signal",
       "Korean dating reality: cast members, panelists, and evolving love lines across the season.",
     ),
-    image:
-      "https://images.unsplash.com/photo-1525182008055-f88b95ff7980?auto=format&fit=crop&w=900&q=80",
+    /** TMDB TV 72976 — original Korean Heart Signal (2017). */
+    image: tmdbPosterUrl("/x15neeMjTYwwnzspAw7S8RMYSqq.jpg"),
     grade: "from-fuchsia-950/70 via-rose-950/40 to-transparent",
     accent: "shadow-[inset_0_0_100px_-30px_rgba(236,72,153,0.35)]",
     stagger: "lg:-translate-y-1",
@@ -50,8 +54,8 @@ const secondaryUniverses = [
       "Transit Love 2",
       "Korean dating show where former couples live together; focus on unresolved ties and new attractions.",
     ),
-    image:
-      "https://images.unsplash.com/photo-1474487548417-781cb7142046?auto=format&fit=crop&w=900&q=80",
+    /** TMDB TV 128119 — EXchange (환승연애 / Transit Love franchise). */
+    image: tmdbPosterUrl("/krXSEbBeAiWyQ3ZQ6JhTrpZlLk5.jpg"),
     grade: "from-slate-950/85 via-blue-950/35 to-transparent",
     accent: "shadow-[inset_0_0_90px_-25px_rgba(30,58,138,0.4)]",
     stagger: "lg:translate-y-2",
@@ -65,8 +69,8 @@ const secondaryUniverses = [
       "Street Woman Fighter",
       "Korean dance survival show: competing street dance crews, judges, eliminations, and alliances.",
     ),
-    image:
-      "https://images.unsplash.com/photo-1501281668665-6791a5dc1c5f?auto=format&fit=crop&w=900&q=80",
+    /** TMDB TV 130347 — Street Woman Fighter. */
+    image: tmdbPosterUrl("/h6sYtJUrl2821oRzhhjXpJ3RXVQ.jpg"),
     grade: "from-violet-950/80 via-fuchsia-950/45 to-transparent",
     accent: "shadow-[inset_0_0_100px_-20px_rgba(168,85,247,0.45)]",
     stagger: "lg:-translate-y-2",
@@ -80,8 +84,8 @@ const secondaryUniverses = [
       "Harry Potter",
       "Wizarding world core cast: Hogwarts houses, Order of the Phoenix, Death Eaters, and key bonds.",
     ),
-    image:
-      "https://images.unsplash.com/photo-1448375240587-893517b2c2f7?auto=format&fit=crop&w=900&q=80",
+    /** TMDB movie 671 — Harry Potter and the Philosopher's Stone. */
+    image: tmdbPosterUrl("/wuMc08IPKEatf9rnMNXvIDxqP4W.jpg"),
     grade: "from-emerald-950/75 via-zinc-950/50 to-transparent",
     accent: "shadow-[inset_0_0_90px_-30px_rgba(5,46,22,0.5)]",
     stagger: "lg:translate-y-4",
@@ -142,10 +146,24 @@ export function FeaturedUniverses() {
               Pick your obsession
             </h2>
           </div>
-          <p className="max-w-md text-sm leading-relaxed text-muted sm:text-right">
-            One flagship board pulls you in; the rest are different emotional temperatures—each
-            opens the live demo so you can start mapping immediately.
-          </p>
+          <div className="max-w-md sm:text-right">
+            <p className="text-sm leading-relaxed text-muted">
+              One flagship board pulls you in; the rest are different emotional temperatures—each
+              opens the live demo so you can start mapping immediately.
+            </p>
+            <p className="mt-3 text-[11px] text-muted/70">
+              Universe tiles use official posters from{" "}
+              <a
+                href="https://www.themoviedb.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline decoration-white/20 underline-offset-2 hover:text-foreground/80"
+              >
+                The Movie Database (TMDB)
+              </a>
+              .
+            </p>
+          </div>
         </div>
 
         {/* Desktop: editorial grid · Mobile: featured + horizontal rail */}
@@ -157,7 +175,7 @@ export function FeaturedUniverses() {
           >
             <Image
               src="/images/singles-inferno-poster.png"
-              alt=""
+              alt="Single's Inferno promotional poster"
               fill
               priority
               className="object-cover object-[center_22%] transition-[transform,filter] duration-[1.1s] ease-out group-hover:scale-[1.05] group-hover:brightness-110"
@@ -235,7 +253,7 @@ function SecondaryCard({
     >
       <Image
         src={card.image}
-        alt=""
+        alt={`${card.label} poster`}
         fill
         className="object-cover transition-[transform,filter] duration-[900ms] ease-out group-hover:scale-110 group-hover:brightness-105"
         sizes={layout === "rail" ? "220px" : "(max-width: 1280px) 40vw, 260px"}
