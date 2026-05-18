@@ -59,3 +59,72 @@ body {
 .path-edge-pulse {
   animation: drama-edge-pulse 1.25s ease-in-out infinite;
 }
+
+/* --- Demo page: cinematic atmosphere (grain, vignette, glow) --- */
+.demo-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 110% 75% at 50% -18%, rgba(190, 45, 60, 0.2), transparent 58%),
+    radial-gradient(ellipse 55% 42% at 100% 8%, rgba(55, 48, 110, 0.14), transparent 52%),
+    radial-gradient(ellipse 50% 38% at 0% 92%, rgba(32, 38, 72, 0.16), transparent 48%),
+    #060608;
+}
+
+.demo-atmosphere-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 70% 65% at 50% 45%,
+    transparent 0%,
+    rgba(0, 0, 0, 0.35) 55%,
+    rgba(0, 0, 0, 0.82) 100%
+  );
+}
+
+.demo-atmosphere-noise {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+.demo-line-texture {
+  position: absolute;
+  inset: -40% -20%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: repeating-linear-gradient(
+    118deg,
+    transparent,
+    transparent 38px,
+    rgba(250, 250, 250, 0.06) 38px,
+    rgba(250, 250, 250, 0.06) 39px
+  );
+}
+
+@keyframes demo-cta-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(250, 250, 250, 0.06),
+      0 0 36px -12px rgba(220, 38, 38, 0.55);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(250, 250, 250, 0.08),
+      0 0 52px -8px rgba(220, 38, 38, 0.72);
+  }
+}
+
+.demo-cta-glow {
+  animation: demo-cta-glow 3.2s ease-in-out infinite;
+}

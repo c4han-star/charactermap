@@ -189,7 +189,7 @@ export async function POST(request: Request) {
       {
         error: "NO_API_KEY",
         message:
-          "Set DEEPSEEK_API_KEY or OPENAI_API_KEY in .env.local. If both exist, OpenAI is used unless LLM_PROVIDER=deepseek. Optional: DEEPSEEK_MODEL, OPENAI_MODEL, LLM_CHAT_COMPLETIONS_URL + LLM_API_KEY.",
+          "Missing LLM credentials on the server. Set DEEPSEEK_API_KEY and/or OPENAI_API_KEY in your host (Vercel: Project → Settings → Environment Variables; locally: .env.local). If both keys exist, OpenAI is used unless LLM_PROVIDER=deepseek. If you set LLM_CHAT_COMPLETIONS_URL, you must also set LLM_API_KEY (or one of the provider keys above). Optional: DEEPSEEK_MODEL, OPENAI_MODEL.",
       },
       { status: 503 },
     );

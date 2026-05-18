@@ -20,6 +20,17 @@ type AiLayerState = {
   confidenceNote: string;
 };
 
+function friendlyApiMessage(data: {
+  error?: string;
+  message?: string;
+  status?: number;
+}, fallback: string) {
+  if (data.error === "NO_API_KEY") {
+    return "This deployment isn’t connected to an AI provider yet. The site owner needs to add keys in the hosting dashboard (same names as a local .env file).";
+  }
+  return data.message ?? data.error ?? fallback;
+}
+
 export function DemoMapSection({ universe }: DemoMapSectionProps) {
   const searchParams = useSearchParams();
   const episodeId =
@@ -36,9 +47,7 @@ export function DemoMapSection({ universe }: DemoMapSectionProps) {
   const [customTitle, setCustomTitle] = useState("");
   const [customPremise, setCustomPremise] = useState("");
   const [customMaxCast, setCustomMaxCast] = useState(14);
-  /** Non-error hint after auto-matching actor photos (identity), not graph layout */
   const [photoResolveNote, setPhotoResolveNote] = useState<string | null>(null);
-  /** Manual `{"charId":"https://..."}` overrides for wrong auto headshots */
   const [photoOverrideText, setPhotoOverrideText] = useState("");
 
   const story = useCustomAiBoard
@@ -80,7 +89,7 @@ export function DemoMapSection({ universe }: DemoMapSectionProps) {
   const fetchCustomGraph = useCallback(async () => {
     const title = customTitle.trim();
     if (title.length < 2) {
-      setAiErr("Enter a show title (at least 2 characters).");
+      setAiErr("Add a show title (at least two characters).");
       return;
     }
     setLoading(true);
@@ -109,13 +118,11 @@ export function DemoMapSection({ universe }: DemoMapSectionProps) {
         confidenceNote?: string;
       };
       if (!res.ok) {
-        setAiErr(
-          data.message ?? data.error ?? `Request failed (${res.status})`,
-        );
+        setAiErr(friendlyApiMessage(data, `Something went wrong (${res.status}).`));
         return;
       }
       if (!data.characters?.length || !data.edges) {
-        setAiErr("The model response was incomplete.");
+        setAiErr("The story didn’t come back complete—try again in a moment.");
         return;
       }
       let characters = data.characters;
@@ -157,7 +164,7 @@ export function DemoMapSection({ universe }: DemoMapSectionProps) {
             );
           } else if (d?.tvId && d.tmdbMatchedCount === 0 && resolved === 0) {
             setPhotoResolveNote(
-              "TMDB matched the show, but no cast headshots lined up with your character names. Add actorName for fictional roles, or paste manual photo URLs (JSON below).",
+              "TMDB matched the show, but no cast headshots lined up with your character names. Add actorName for fictional roles, or paste manual photo URLs (JSON in Advanced settings).",
             );
           } else if (d?.tvId && resolved < n) {
             setPhotoResolveNote(
@@ -184,7 +191,7 @@ export function DemoMapSection({ universe }: DemoMapSectionProps) {
         confidenceNote: data.confidenceNote ?? "",
       });
     } catch {
-      setAiErr("Network or server error.");
+      setAiErr("Network hiccup—try again.");
     } finally {
       setLoading(false);
     }
@@ -213,15 +220,11 @@ export function DemoMapSection({ universe }: DemoMapSectionProps) {
         confidenceNote?: string;
       };
       if (!res.ok) {
-        setAiErr(
-          data.message ??
-            data.error ??
-            `Request failed (${res.status})`,
-        );
+        setAiErr(friendlyApiMessage(data, `Something went wrong (${res.status}).`));
         return;
       }
       if (!data.characters?.length || !data.edges) {
-        setAiErr("The model response was incomplete.");
+        setAiErr("The story didn’t come back complete—try again in a moment.");
         return;
       }
       setUseCustomAiBoard(false);
@@ -232,7 +235,7 @@ export function DemoMapSection({ universe }: DemoMapSectionProps) {
         confidenceNote: data.confidenceNote ?? "",
       });
     } catch {
-      setAiErr("Network or server error.");
+      setAiErr("Network hiccup—try again.");
     } finally {
       setLoading(false);
     }
@@ -285,179 +288,238 @@ export function DemoMapSection({ universe }: DemoMapSectionProps) {
   }, [aiLayer, photoOverrideText]);
 
   return (
-    <div className="space-y-4">
-      <div
-        className="space-y-3 rounded-lg border border-border bg-surface/40 px-3 py-3"
-        onPointerDown={(e) => e.stopPropagation()}
-      >
-        <div>
-          <p className="text-sm font-medium text-foreground">Your show</p>
-          <p className="mt-1 text-xs text-muted">
-            Enter a show title and optional premise; the server calls your configured LLM
-            (supports <code className="text-foreground">DEEPSEEK_API_KEY</code> or{" "}
-            <code className="text-foreground">OPENAI_API_KEY</code>
-            ; if both are set, OpenAI is used unless you set{" "}
-            <code className="text-foreground">LLM_PROVIDER=deepseek</code> in{" "}
-            <code className="text-foreground">.env.local</code>
-            ) to produce character and edge JSON. This demo always requests English labels
-            and summaries from the model. Auto photos try to match each card to
-            the right performer (not graph layout). If a face mismatches the role, add{" "}
-            <code className="text-foreground">actorName</code> for billing names, or
-            paste manual <code className="text-foreground">https://</code> URLs below.
-            Headshots use <code className="text-foreground">TMDB_API_KEY</code> (TV
-            search + cast credits + person search). Optionally add{" "}
-            <code className="text-foreground">GOOGLE_CSE_API_KEY</code> +{" "}
-            <code className="text-foreground">GOOGLE_CSE_CX</code> for Google Programmable
-            Search image fallback (enable Custom Search API in Google Cloud; free tier is
-            modest). Wikipedia is not used. Output is model-generated and may not match
-            the real show.
-          </p>
+    <div className="relative z-10 space-y-12">
+      <div className="relative rounded-[1.35rem] bg-zinc-950/50 px-8 py-11 shadow-[0_28px_90px_-28px_rgba(0,0,0,0.92)] ring-1 ring-white/[0.08] backdrop-blur-2xl sm:px-12 sm:py-14">
+        <div className="space-y-8" onPointerDown={(e) => e.stopPropagation()}>
+          <label className="block">
+            <span className="text-xs font-medium uppercase tracking-[0.2em] text-muted">
+              Show title
+            </span>
+            <input
+              type="text"
+              value={customTitle}
+              onChange={(e) => setCustomTitle(e.target.value)}
+              placeholder="The Glory, Single’s Inferno, Heart Signal…"
+              className="mt-3 w-full border-0 border-b border-white/15 bg-transparent pb-3 text-lg text-foreground outline-none transition-colors placeholder:text-muted/50 focus:border-accent/80"
+              maxLength={120}
+              autoComplete="off"
+            />
+          </label>
+
+          <label className="block">
+            <span className="text-xs font-medium uppercase tracking-[0.2em] text-muted">
+              Focus or notes (optional)
+            </span>
+            <textarea
+              value={customPremise}
+              onChange={(e) => setCustomPremise(e.target.value)}
+              placeholder="Love triangle, betrayal arc, episode 6 tension…"
+              rows={3}
+              className="mt-3 w-full resize-y rounded-lg border border-white/10 bg-black/25 px-4 py-3 text-sm leading-relaxed text-foreground outline-none transition-colors placeholder:text-muted/45 focus:border-white/20"
+              maxLength={2500}
+            />
+          </label>
+
+          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/[0.06] pt-6">
+            <span className="text-xs text-muted">Cast size</span>
+            <div className="flex items-center gap-3">
+              <input
+                type="number"
+                min={4}
+                max={20}
+                value={customMaxCast}
+                onChange={(e) => {
+                  const v = Number(e.target.value);
+                  if (!Number.isFinite(v)) return;
+                  setCustomMaxCast(Math.min(20, Math.max(4, Math.round(v))));
+                }}
+                className="w-16 rounded-md border border-white/12 bg-black/30 px-2 py-1.5 text-center text-sm text-foreground outline-none focus:border-white/25"
+                aria-label="Maximum characters on board"
+              />
+              <span className="text-xs text-muted/80">4–20 roles</span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => void fetchCustomGraph()}
+            className="demo-cta-glow relative w-full rounded-xl bg-accent py-4 text-base font-semibold tracking-wide text-white transition-transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-45"
+          >
+            {loading ? "Generating…" : "Generate relationship map"}
+          </button>
         </div>
-        <label className="block text-sm">
-          <span className="text-muted">Show title</span>
-          <input
-            type="text"
-            value={customTitle}
-            onChange={(e) => setCustomTitle(e.target.value)}
-            placeholder="e.g. The Glory · Episode 6"
-            className="mt-1 w-full rounded border border-border bg-background px-2 py-1.5 text-foreground"
-            maxLength={120}
-          />
-        </label>
-        <label className="block text-sm">
-          <span className="text-muted">Premise / episode focus (optional)</span>
-          <textarea
-            value={customPremise}
-            onChange={(e) => setCustomPremise(e.target.value)}
-            placeholder="Cast list, arc notes, or where the episode should end…"
-            rows={3}
-            className="mt-1 w-full resize-y rounded border border-border bg-background px-2 py-1.5 text-foreground"
-            maxLength={2500}
-          />
-        </label>
-        <label className="flex flex-wrap items-center gap-2 text-sm text-muted">
-          <span>Max characters (4–20, default 14)</span>
-          <input
-            type="number"
-            min={4}
-            max={20}
-            value={customMaxCast}
-            onChange={(e) => {
-              const v = Number(e.target.value);
-              if (!Number.isFinite(v)) return;
-              setCustomMaxCast(Math.min(20, Math.max(4, Math.round(v))));
-            }}
-            className="w-20 rounded border border-border bg-background px-2 py-1 text-foreground"
-          />
-        </label>
-        <button
-          type="button"
-          disabled={loading}
-          onClick={() => void fetchCustomGraph()}
-          className="rounded-md border border-border bg-accent px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
-        >
-          {loading ? "Generating…" : "Generate custom relationship board"}
-        </button>
       </div>
 
       {universe === "singles-inferno" ? (
-        <>
-          <div
-            data-agent-toolbar
-            className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-surface/40 px-3 py-3"
-            onPointerDown={(e) => e.stopPropagation()}
+        <div
+          data-agent-toolbar
+          className="flex flex-col items-stretch gap-4 rounded-2xl border border-white/[0.07] bg-black/25 px-6 py-6 text-center backdrop-blur-md sm:flex-row sm:items-center sm:justify-between sm:text-left"
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          <p className="text-sm leading-relaxed text-muted">
+            Season 5 showcase — generate ties for the episode you&apos;re scrubbing.
+          </p>
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => void fetchAiGraph()}
+            className="shrink-0 rounded-xl border border-white/15 bg-white/[0.06] px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-white/[0.1] disabled:opacity-45"
           >
-            <span className="text-sm text-muted">
-              Example: Single&apos;s Inferno S5 (fixed cast)
-            </span>
-            <button
-              type="button"
-              disabled={loading}
-              onClick={() => void fetchAiGraph()}
-              className="rounded-md border border-border bg-accent px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
-            >
-              {loading ? "Generating…" : "Generate AI graph for this episode"}
-            </button>
-          </div>
-        </>
+            {loading ? "Generating…" : "Refresh episode map"}
+          </button>
+        </div>
       ) : null}
 
-      <p className="text-xs text-muted">
-        Models can misremember names or timelines; for factual grounding you can add
-        retrieval (RAG / browsing) later.
-      </p>
-
       {aiErr ? (
-        <p className="text-sm text-red-400" role="alert">
+        <p
+          className="rounded-lg border border-red-500/25 bg-red-950/20 px-4 py-3 text-center text-sm text-red-200/95"
+          role="alert"
+        >
           {aiErr}
         </p>
       ) : null}
 
       {photoResolveNote ? (
-        <p className="text-sm text-amber-200/90" role="status">
-          {photoResolveNote}
+        <p className="text-center text-xs leading-relaxed text-amber-200/75">
+          Some portraits may not match the cast perfectly. Open{" "}
+          <span className="text-amber-100/90">Advanced settings</span> for fixes
+          and technical detail.
         </p>
       ) : null}
 
-      {aiLayer && useCustomAiBoard ? (
-        <div
-          className="space-y-2 rounded-lg border border-border bg-surface/30 px-3 py-3"
-          onPointerDown={(e) => e.stopPropagation()}
-        >
-          <p className="text-sm font-medium text-foreground">Manual photo fix</p>
-          <p className="text-xs text-muted">
-            Use when the face does not match the role (not for moving nodes). Paste a
-            JSON object: keys are <code className="text-foreground">characters[].id</code>
-            , values are <code className="text-foreground">https://</code> image URLs
-            (TMDB URLs work well). Example:{" "}
-            <code className="text-foreground">
-              {`{"heesun":"https://image.tmdb.org/t/p/w185/....jpg"}`}
-            </code>
-          </p>
-          <textarea
-            value={photoOverrideText}
-            onChange={(e) => setPhotoOverrideText(e.target.value)}
-            rows={4}
-            spellCheck={false}
-            placeholder='{"role_id":"https://..."}'
-            className="w-full resize-y rounded border border-border bg-background px-2 py-1.5 font-mono text-xs text-foreground"
-          />
-          <button
-            type="button"
-            onClick={() => applyPhotoOverrides()}
-            className="rounded-md border border-border bg-surface px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-surface/80"
+      <details className="group rounded-2xl border border-white/[0.06] bg-black/20 backdrop-blur-sm">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 text-sm text-muted transition-colors hover:text-foreground [&::-webkit-details-marker]:hidden">
+          <span className="font-medium tracking-wide">Advanced settings</span>
+          <span
+            className="text-xs text-muted/80 transition-transform group-open:rotate-180"
+            aria-hidden
           >
-            Apply photo URLs
-          </button>
+            ▼
+          </span>
+        </summary>
+        <div className="space-y-5 border-t border-white/[0.06] px-5 py-5 text-xs leading-relaxed text-muted">
+          <section className="space-y-2">
+            <h3 className="text-[11px] font-semibold uppercase tracking-wider text-foreground/80">
+              Host &amp; API setup
+            </h3>
+            <p>
+              The server needs <code className="text-foreground/90">OPENAI_API_KEY</code>{" "}
+              or <code className="text-foreground/90">DEEPSEEK_API_KEY</code> (Vercel:
+              Project → Settings → Environment Variables; locally:{" "}
+              <code className="text-foreground/90">.env.local</code>
+              ). If both exist, OpenAI is used unless{" "}
+              <code className="text-foreground/90">LLM_PROVIDER=deepseek</code>. If you set{" "}
+              <code className="text-foreground/90">LLM_CHAT_COMPLETIONS_URL</code>, also set{" "}
+              <code className="text-foreground/90">LLM_API_KEY</code> (or a provider key
+              above). Optional:{" "}
+              <code className="text-foreground/90">DEEPSEEK_MODEL</code>,{" "}
+              <code className="text-foreground/90">OPENAI_MODEL</code>.
+            </p>
+            <p>
+              This flow requests <strong className="text-foreground/90">English</strong>{" "}
+              labels from the model. Cast photos use{" "}
+              <code className="text-foreground/90">TMDB_API_KEY</code> (TV search, credits,
+              person search). Optional{" "}
+              <code className="text-foreground/90">GOOGLE_CSE_API_KEY</code> +{" "}
+              <code className="text-foreground/90">GOOGLE_CSE_CX</code> for image fallback.
+              Wikipedia is not used. Output is model-generated and may not match a real
+              show.
+            </p>
+          </section>
+
+          <section className="space-y-2">
+            <h3 className="text-[11px] font-semibold uppercase tracking-wider text-foreground/80">
+              Board legend
+            </h3>
+            <p>
+              Pink = romance · blue = alliance · red = conflict / betrayal · dashed = crush
+              or hidden ties.
+            </p>
+          </section>
+
+          <section className="space-y-2">
+            <h3 className="text-[11px] font-semibold uppercase tracking-wider text-foreground/80">
+              Accuracy
+            </h3>
+            <p>
+              Models can misremember names or timelines; for factual grounding you can add
+              retrieval (RAG / browsing) later.
+            </p>
+          </section>
+
+          {photoResolveNote ? (
+            <section className="space-y-2">
+              <h3 className="text-[11px] font-semibold uppercase tracking-wider text-foreground/80">
+                Photo matching (full message)
+              </h3>
+              <p className="whitespace-pre-wrap rounded-md border border-white/10 bg-black/30 p-3 font-mono text-[11px] text-zinc-300">
+                {photoResolveNote}
+              </p>
+            </section>
+          ) : null}
+
+          {aiLayer && useCustomAiBoard ? (
+            <section className="space-y-3">
+              <h3 className="text-[11px] font-semibold uppercase tracking-wider text-foreground/80">
+                Manual photo URLs (JSON)
+              </h3>
+              <p>
+                When a face doesn&apos;t match the role, paste a JSON object: keys are{" "}
+                <code className="text-foreground/90">characters[].id</code>, values are{" "}
+                <code className="text-foreground/90">https://</code> image URLs. Example:{" "}
+                <code className="text-foreground/90">
+                  {`{"heesun":"https://image.tmdb.org/t/p/w185/....jpg"}`}
+                </code>
+              </p>
+              <textarea
+                value={photoOverrideText}
+                onChange={(e) => setPhotoOverrideText(e.target.value)}
+                rows={4}
+                spellCheck={false}
+                placeholder='{"role_id":"https://..."}'
+                className="w-full resize-y rounded-lg border border-white/10 bg-black/35 px-3 py-2 font-mono text-[11px] text-foreground outline-none focus:border-white/20"
+              />
+              <button
+                type="button"
+                onClick={() => applyPhotoOverrides()}
+                className="rounded-lg border border-white/12 bg-white/[0.06] px-4 py-2 text-xs font-medium text-foreground transition-colors hover:bg-white/[0.1]"
+              >
+                Apply photo URLs
+              </button>
+            </section>
+          ) : null}
         </div>
-      ) : null}
+      </details>
 
       {aiLayer ? (
-        <>
-          <div className="rounded-lg border border-border bg-surface/30 px-4 py-3 text-sm leading-relaxed text-muted">
+        <div className="space-y-4">
+          <div className="rounded-2xl border border-white/[0.07] bg-black/20 px-5 py-5 text-sm leading-relaxed backdrop-blur-sm">
             {aiLayer.episodeSummary ? (
-              <p className="text-foreground">{aiLayer.episodeSummary}</p>
+              <p className="text-pretty text-foreground/95">{aiLayer.episodeSummary}</p>
             ) : null}
             {aiLayer.confidenceNote ? (
-              <p className="mt-2 text-xs">{aiLayer.confidenceNote}</p>
+              <p className="mt-3 text-pretty text-xs text-muted">{aiLayer.confidenceNote}</p>
             ) : null}
           </div>
           <button
             type="button"
             onClick={clearAi}
-            className="text-sm text-muted underline-offset-2 hover:text-foreground hover:underline"
+            className="text-sm text-muted underline-offset-4 transition-colors hover:text-foreground hover:underline"
           >
-            Clear AI layer and restore built-in demo data
+            Clear board and start over
           </button>
-        </>
+        </div>
       ) : null}
 
-      <RelationshipGraphPreview
-        variant="full"
-        story={story}
-        overrideGraph={overrideGraph}
-        aiOverlay={Boolean(aiLayer)}
-      />
+      <div className="pt-2">
+        <RelationshipGraphPreview
+          variant="full"
+          story={story}
+          overrideGraph={overrideGraph}
+          aiOverlay={Boolean(aiLayer)}
+        />
+      </div>
     </div>
   );
 }
