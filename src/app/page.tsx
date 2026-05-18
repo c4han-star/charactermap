@@ -1,21 +1,19 @@
 import { DemoSection } from "@/components/landing/DemoSection";
 import { FeaturedUniverses } from "@/components/landing/FeaturedUniverses";
 import { Hero } from "@/components/landing/Hero";
-import { HowItWorks } from "@/components/landing/HowItWorks";
+import { HomeAtmosphere } from "@/components/landing/HomeAtmosphere";
+import { HomeEditorial } from "@/components/landing/HomeEditorial";
 import { MarketingShell } from "@/components/landing/MarketingShell";
-import { Problem } from "@/components/landing/Problem";
-import { Solution } from "@/components/landing/Solution";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="relative min-h-screen bg-[#050506] text-foreground">
+      <HomeAtmosphere />
       <MarketingShell>
         <Hero />
         <FeaturedUniverses />
-        <Problem />
-        <Solution />
+        <HomeEditorial />
         <DemoSection />
-        <HowItWorks />
       </MarketingShell>
     </div>
   );
